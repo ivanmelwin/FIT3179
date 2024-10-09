@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choropleth Map: Sales by State</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+</head>
+<body>
+    <h1>Sales by State in Australia</h1>
+    <div id="view"></div>
+
+    <script type="text/javascript">
+        var spec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "width": 800,
+          "height": 600,
+          "title": "Sales by State in Australia",
+          "data": {
+            "url": "./au-states-topo.json",  
+            "format": {
+              "type": "topojson",
+              "feature": "austates"  // The feature name in your TopoJSON file
+            }
+          },
+          "transform": [
+            {
+              "lookup": "id",  // Match the 'id' field in TopoJSON
+              "from": {
+                "data": {
+                  "values": [
+                    {"id": 0, "State": "New South Wales", "Sales $m": 461.8},
+                    {"id": 1, "State": "Victoria", "Sales $m": 348.6},
+                    {"id": 2, "State": "Queensland", "Sales $m": 294.2},
+                    {"id": 3, "State": "South Australia", "Sales $m": 233.0},
+                    {"id": 4, "State": "Western Australia", "Sales $m": 217.6},
+                    {"id": 5, "State": "Tasmania", "Sales $m": 62.4},
+                    {"id": 6, "State": "Northern Territory", "Sales $m": 55.2},
+                    {"id": 7, "State": "Australian Capital Territory", "Sales $m": 76.1}
+                  ]
+                },
+                "key": "id",  // Match the 'id' field from the TopoJSON file with the sales data
+                "fields": ["Sales $m", "State"] 
+              }
+            }
+          ],
+          "projection": {"type": "mercator"},
+          "mark": "geoshape",
+          "encoding": {
+            "color": {
+              "field": "Sales $m",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "blues"  
+              }
+            },
+            "tooltip": [
+              {"field": "State", "type": "nominal", "title": "State"},  // Display state name in the tooltip
+              {"field": "Sales $m", "type": "quantitative", "title": "Sales ($m)"}
+            ]
+          }
+        };
+
+        // Embed the Vega-Lite visualization in the div with id="view"
+        vegaEmbed('#view', spec).catch(console.error);
+    </script>
+</body>
+</html>
