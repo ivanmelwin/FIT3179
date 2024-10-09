@@ -1,14 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My first HTML Document</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choropleth Map and Bar Chart: Sales and Wages by State</title>
+
+    <!-- Vega, Vega-Lite, and Vega-Embed from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
 </head>
 <body>
-    <h1>Heading</h1>
-    <p>My First Paragraph.</p>
+    <h1>Sales and Wages by State in Australia</h1>
+    
+    <!-- Choropleth Map Div -->
+    <h2>Choropleth Map: Sales by State</h2>
+    <div id="choropleth_map"></div>
+
+    <!-- Bar Chart Div -->
+    <h2>Bar Chart: Wages by State</h2>
+    <div id="bar_chart"></div>
+
+    <script type="text/javascript">
+        // Choropleth Map Specification
+        var spec1 = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "width": 800,
+          "height": 600,
+          "title": "Sales by State in Australia",
+          "data": {
+            "url": "./au-states-topo.json",  
+            "format": {
+              "type": "topojson",
+              "feature": "austates"
+            }
+          },
+          "transform": [
+            {
+              "lookup": "id",  
+              "from": {
+                "data": {
+                  "values": [
+                    {"id": 0, "State": "New South Wales", "Sales $m": 461.8},
+                    {"id": 1, "State": "Victoria", "Sales $m": 348.6},
+                    {"id": 2, "State": "Queensland", "Sales $m": 294.2},
+                    {"id": 3, "State": "South Australia", "Sales $m": 233.0},
+                    {"id": 4, "State": "Western Australia", "Sales $m": 217.6},
+                    {"id": 5, "State": "Tasmania", "Sales $m": 62.4},
+                    {"id": 6, "State": "Northern Territory", "Sales $m": 55.2},
+                    {"id": 7, "State": "Australian Capital Territory", "Sales $m": 76.1}
+                  ]
+                },
+                "key": "id",
+                "fields": ["Sales $m", "State"]
+              }
+            }
+          ],
+          "projection": {"type": "mercator"},
+          "mark": "geoshape",
+          "encoding": {
+            "color": {
+              "field": "Sales $m",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "blues"  
+              }
+            },
+            "tooltip": [
+              {"field": "State", "type": "nominal", "title": "State"},
+              {"field": "Sales $m", "type": "quantitative", "title": "Sales ($m)"}
+            ]
+          }
+        };
+
+        // Bar Chart Specification
+        var spec2 = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "width": 800,
+          "height": 600,
+          "title": "Total Wages by State in Australia",
+          "data": {
+            "values": [
+              {"State": "New South Wales", "Wages $m": 2.3},
+              {"State": "Victoria", "Wages $m": 5.8},
+              {"State": "Queensland", "Wages $m": 4.6},
+              {"State": "South Australia", "Wages $m": 3.2},
+              {"State": "Western Australia", "Wages $m": 4.0},
+              {"State": "Tasmania", "Wages $m": 1.5},
+              {"State": "Northern Territory", "Wages $m": 1.2},
+              {"State": "Australian Capital Territory", "Wages $m": 1.0}
+            ]
+          },
+          "mark": "bar",
+          "encoding": {
+            "x": {"field": "State", "type": "nominal", "title": "State"},
+            "y": {"field": "Wages $m", "type": "quantitative", "title": "Wages ($m)"},
+            "color": {"field": "State", "type": "nominal"},
+            "tooltip": [
+              {"field": "State", "type": "nominal", "title": "State"},
+              {"field": "Wages $m", "type": "quantitative", "title": "Wages ($m)"}
+            ]
+          }
+        };
+
+        // Embed both visualizations
+        vegaEmbed('#choropleth_map', spec1).catch(console.error);
+        vegaEmbed('#bar_chart', spec2).catch(console.error);
+    </script>
 </body>
-<h2>Hyperlinks in HTML</h2>
-<a href = "https://www.monash.edu/"></href">
-    CLick here to view the Monash wesbite
-</a>
 </html>
