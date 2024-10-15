@@ -1,4 +1,4 @@
-Store No.,Sales $m,Wages $m,No. Staff,Location,Loc'n (Num),State,State (Num),Age (Yrs),GrossProfit,Adv.$'000,Competitors,HrsTrading,Sundays,Sundays (Num),Mng-Sex,Mng-Sex (Num),Mng-Age,Mng-Exp,Mng-Train,Union%,Car Spaces,HomeDel,HomeDel (Num),Basket:2013,Basket:2014,,
+Store No,Sales $m,Wages $m,No. Staff,Location,Loc'n (Num),State,State (Num),Age (Yrs),GrossProfit,Adv.$'000,Competitors,HrsTrading,Sundays,Sundays (Num),Mng-Sex,Mng-Sex (Num),Mng-Age,Mng-Exp,Mng-Train,Union%,Car Spaces,HomeDel,HomeDel (Num),Basket:2013,Basket:2014,,
 1,12.5,2.3,60,Mall,2,NSW,1,10,0.712,171,3,110,Sun:No,0,Male,0,33,12,2,38,46,Del:No,0,$171.00,$178.00,,
 2,14.5,2.7,69,Mall,2,Vic,2,8,0.091,213,5,134,Sun:No,0,Male,0,33,16,1,38,73,Del:No,0,$168.00,$178.00,,
 3,19.0,3.1,79,Country,3,Vic,2,7,1.075,255,2,98,Sun:Yes,1,Male,0,30,9,2,39,64,Del:No,0,$180.00,$188.00,,
