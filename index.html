@@ -3,109 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choropleth Map and Bar Chart: Sales and Wages by State</title>
+    <title>Foodmart Business Insights and Analysis</title>
 
-    <!-- Vega, Vega-Lite, and Vega-Embed from CDN -->
+    <!-- Include Vega, Vega-Lite, and Vega-Embed from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding-bottom: 100px;
+            text-align: center;
+            background-color: #f9f2e8;
+        }
+        .content-wrapper {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            margin-top: 5px;
+        }
+        .intro-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .intro-text {
+            max-width: 350px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        p {
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.8;
+            padding: 10px;
+            text-align: justify;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+        }
+        .chart-item {
+            width: 45%;
+            min-width: 400px;
+            max-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        .chart-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 0;
+        }
+        .chart-content.horizontal {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 20px 0;
+        }
+        .chart-content.alternate.horizontal {
+            flex-direction: row-reverse;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 20px 0;
+        }
+        .metadata {
+            margin-top: 50px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .metadata a {
+            color: #0073e6;
+            text-decoration: none;
+        }
+        @media (max-width: 1024px) {
+            .chart-item {
+                width: 90%;
+                min-width: 300px;
+            }
+            p {
+                max-width: 90%;
+                text-align: center;
+            }
+            .chart-content.horizontal,
+            .chart-content.alternate.horizontal {
+                flex-direction: column;
+                align-items: center;
+            }
+            .intro-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Sales and Wages by State in Australia</h1>
-    
-    <!-- Choropleth Map Div -->
-    <h2>Choropleth Map: Sales by State</h2>
-    <div id="choropleth_map"></div>
+    <div class="content-wrapper">
+        <h1>Foodmart Business Insights and Analysis</h1>
+        <h2>FIT3179 Visualisation 2 - Ivan Melwin (Student ID: 32496397)</h2>
 
-    <!-- Bar Chart Div -->
-    <h2>Bar Chart: Wages by State</h2>
-    <div id="bar_chart"></div>
+        <div class="intro-container">
+            <div class="intro-text">
+                <p>This report presents a series of visualisations designed to provide comprehensive insights into the performance of Foodmart stores across Australia. These visualisations explore key aspects such as sales, gross profit, store age, and other operational factors to support business decision-making.</p>
+            </div>
+            <div class="intro-text">
+                <p>The visualisations have been developed specifically for stakeholders at Foodmart, including senior management and strategic planners. The purpose is to enable data-driven insights that can guide future strategies, optimise operations, and enhance overall business planning.</p>
+            </div>
+        </div>
 
+        <!-- Bubble Chart and Text Side by Side -->
+        <div class="chart-content horizontal">
+            <div class="chart-item" id="bubble_chart"></div>
+            <p>
+                The <strong>bubble chart</strong> visualises the relationship between <strong>store age</strong>, <strong>gross profit</strong>, and <strong>store type</strong>. Each bubble represents a store, with the <strong>size</strong> indicating <strong>sales volume</strong> and the <strong>color</strong> representing the <strong>store type</strong> (Mall, Strip, or Country). Older <strong>country stores</strong> tend to have higher <strong>sales</strong> and <strong>profit</strong>, reflecting their established customer base and market position. <strong>Mall stores</strong> generate consistent mid-range profits, which may be due to their strategic locations and customer accessibility. <strong>Strip stores</strong>, however, exhibit high variability in their performance, likely influenced by differing customer demographics and store locations. This chart highlights the impact of <strong>store age</strong>, <strong>type</strong>, and <strong>market positioning</strong> on <strong>sales</strong> and <strong>profitability</strong>, providing valuable insights for optimising store operations and future growth strategies.
+            </p>
+        </div>
+
+        <!-- Choropleth Map and Text Side by Side (Alternated) -->
+        <div class="chart-content alternate horizontal">
+            <div class="chart-item" id="view"></div>
+            <p>
+                The <strong>choropleth map</strong> visualises <strong>normalised sales</strong> by <strong>population size</strong> across Australian states. <strong>Northern Territory</strong> has the highest <strong>sales per capita</strong>, reflecting a higher sales intensity relative to its small population. <strong>Tasmania</strong> also shows significant sales per capita, suggesting strong market penetration despite its smaller size. In contrast, <strong>New South Wales</strong> and <strong>Victoria</strong> exhibit lower sales per capita, which can be attributed to their larger populations and more competitive retail environments. This map provides a visual representation of <strong>market saturation</strong> and potential areas for targeted growth, helping stakeholders identify regions where increased marketing efforts or store expansion could be most beneficial.
+            </p>
+        </div>
+
+        <!-- Scatter Plot and Text Side by Side -->
+        <div class="chart-content horizontal">
+            <div class="chart-item" id="scatterplot"></div>
+            <p>
+                The <strong>scatter plot</strong> illustrates the relationship between <strong>store age</strong> and <strong>managerial experience</strong>. It helps identify if older stores tend to have more experienced managers, providing insights into how <strong>management experience</strong> evolves as stores mature. The data reveals that stores with a longer presence in the market often have managers with extensive experience, indicating operational stability and effective management practices. Additionally, some variance in experience levels among stores of similar ages suggests differences in <strong>management retention strategies</strong>, regional influences, or company policies that may impact how experience is accumulated across different locations. This analysis offers a deeper understanding of how store maturity correlates with managerial expertise, which is crucial for ensuring consistent operational quality.
+            </p>
+        </div>
+
+        <!-- Box Plot and Text Side by Side (Alternated) -->
+        <div class="chart-content alternate horizontal">
+            <div class="chart-item" id="boxplot"></div>
+            <p>
+                The <strong>box plot</strong> displays the distribution of <strong>gross profit</strong> for stores with and without <strong>home delivery services</strong>. Stores offering <strong>home delivery</strong> exhibit a wider range of gross profit values, suggesting that these services help attract a broader and more diverse <strong>customer base</strong>, leading to varied revenue outcomes. On the other hand, stores without <strong>home delivery</strong> tend to have a more consistent gross profit distribution, indicating a stable customer base and less variability. The comparison provides valuable insights into the impact of offering <strong>home delivery</strong>, showing how it may contribute to both <strong>revenue diversification</strong> and a more dynamic market presence.
+            </p>
+        </div>
+
+        <!-- Donut Chart (Number of Staff) and Text Side by Side -->
+        <div class="chart-content horizontal">
+            <div class="chart-item" id="donut_chart"></div>
+            <p>
+                The <strong>donut chart</strong> shows the distribution of <strong>staff</strong> across different Australian states. <strong>New South Wales</strong> employs the largest percentage of staff (26.03%), followed by <strong>Victoria</strong> (19.29%) and <strong>Queensland</strong> (17.18%). This distribution reflects the concentration of Foodmart stores in more populous states, where higher staffing levels are needed to meet customer demand.
+            </p>
+        </div>
+
+        <!-- Donut Chart (Wages) and Text Side by Side (Alternated) -->
+        <div class="chart-content alternate horizontal">
+            <div class="chart-item" id="wages_donut_chart"></div>
+            <p>
+                The <strong>donut chart</strong> shows the distribution of <strong>wages</strong> across Australian states, highlighting <strong>regional differences</strong>. <strong>Victoria</strong> and <strong>Queensland</strong> have the highest <strong>wage distributions</strong>, which suggests larger staff sizes or higher compensation levels in these regions. In contrast, smaller states like <strong>Tasmania</strong> and <strong>Northern Territory</strong> have lower <strong>wage shares</strong>, reflecting fewer stores and smaller workforce needs. These insights help in understanding the <strong>allocation of resources</strong> and guiding <strong>workforce planning</strong> across different regions.
+            </p>
+        </div>
+        <div class="metadata">
+            This visualisation was created by Ivan Melwin on 16/10/2024. This data was sourced from <a href="https://www.kaggle.com/datasets/dermisfit/foodmart-dataset" target="_blank">Kaggle</a>.
+        </div>
+    </div>
+
+    <!-- Vega-Lite visualisations Scripts -->
     <script type="text/javascript">
-        // Choropleth Map Specification
-        var spec1 = {
-          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-          "width": 800,
-          "height": 600,
-          "title": "Sales by State in Australia",
-          "data": {
-            "url": "./au-states-topo.json",  
-            "format": {
-              "type": "topojson",
-              "feature": "austates"
-            }
-          },
-          "transform": [
-            {
-              "lookup": "id",  
-              "from": {
-                "data": {
-                  "values": [
-                    {"id": 0, "State": "New South Wales", "Sales $m": 461.8},
-                    {"id": 1, "State": "Victoria", "Sales $m": 348.6},
-                    {"id": 2, "State": "Queensland", "Sales $m": 294.2},
-                    {"id": 3, "State": "South Australia", "Sales $m": 233.0},
-                    {"id": 4, "State": "Western Australia", "Sales $m": 217.6},
-                    {"id": 5, "State": "Tasmania", "Sales $m": 62.4},
-                    {"id": 6, "State": "Northern Territory", "Sales $m": 55.2},
-                    {"id": 7, "State": "Australian Capital Territory", "Sales $m": 76.1}
-                  ]
-                },
-                "key": "id",
-                "fields": ["Sales $m", "State"]
-              }
-            }
-          ],
-          "projection": {"type": "mercator"},
-          "mark": "geoshape",
-          "encoding": {
-            "color": {
-              "field": "Sales $m",
-              "type": "quantitative",
-              "scale": {
-                "scheme": "blues"  
-              }
+        // Bubble chart specification
+        var bubbleSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 400,
+            "height": 400,
+            "title": "Gross Profit vs. Store Age",
+            "data": {
+                "url": "StoresData.csv",
+                "format": { "type": "csv" }
             },
-            "tooltip": [
-              {"field": "State", "type": "nominal", "title": "State"},
-              {"field": "Sales $m", "type": "quantitative", "title": "Sales ($m)"}
-            ]
-          }
+            "transform": [
+                { "filter": "datum['GrossProfit'] != null" }
+            ],
+            "mark": "circle",
+            "encoding": {
+                "x": {
+                    "field": "Age (Yrs)",
+                    "type": "quantitative",
+                    "title": "Store Age (Years)"
+                },
+                "y": {
+                    "field": "GrossProfit",
+                    "type": "quantitative",
+                    "title": "Gross Profit ($m)"
+                },
+                "size": {
+                    "field": "Sales $m",
+                    "type": "quantitative",
+                    "title": "Sales ($m)"
+                },
+                "color": {
+                    "field": "Location",
+                    "type": "nominal",
+                    "title": "Store Type"
+                },
+                "tooltip": [
+                    { "field": "Age (Yrs)", "type": "quantitative", "title": "Store Age" },
+                    { "field": "GrossProfit", "type": "quantitative", "title": "Gross Profit ($m)" },
+                    { "field": "Sales $m", "type": "quantitative", "title": "Sales ($m)" },
+                    { "field": "Location", "type": "nominal", "title": "Store Type" }
+                ]
+            }
         };
+        vegaEmbed('#bubble_chart', bubbleSpec).catch(console.error);
 
-        // Bar Chart Specification
-        var spec2 = {
-          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-          "width": 800,
-          "height": 600,
-          "title": "Total Wages by State in Australia",
-          "data": {
-            "values": [
-              {"State": "New South Wales", "Wages $m": 2.3},
-              {"State": "Victoria", "Wages $m": 5.8},
-              {"State": "Queensland", "Wages $m": 4.6},
-              {"State": "South Australia", "Wages $m": 3.2},
-              {"State": "Western Australia", "Wages $m": 4.0},
-              {"State": "Tasmania", "Wages $m": 1.5},
-              {"State": "Northern Territory", "Wages $m": 1.2},
-              {"State": "Australian Capital Territory", "Wages $m": 1.0}
-            ]
-          },
-          "mark": "bar",
-          "encoding": {
-            "x": {"field": "State", "type": "nominal", "title": "State"},
-            "y": {"field": "Wages $m", "type": "quantitative", "title": "Wages ($m)"},
-            "color": {"field": "State", "type": "nominal"},
-            "tooltip": [
-              {"field": "State", "type": "nominal", "title": "State"},
-              {"field": "Wages $m", "type": "quantitative", "title": "Wages ($m)"}
-            ]
-          }
+        // Choropleth map specification
+        var spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 400,
+            "height": 400,
+            "title": "Normalised Sales by State in Australia",
+            "data": {
+                "url": "./au-states-topo.json",
+                "format": {
+                    "type": "topojson",
+                    "feature": "austates"
+                }
+            },
+            "transform": [
+                {
+                    "lookup": "id",
+                    "from": {
+                        "data": {
+                            "values": [
+                                {"id": 0, "State": "New South Wales", "SalesM": 12.5, "PopulationK": 8469.6},
+                                {"id": 1, "State": "Victoria", "SalesM": 14.5, "PopulationK": 6959.2},
+                                {"id": 2, "State": "Queensland", "SalesM": 18.2, "PopulationK": 5560.5},
+                                {"id": 3, "State": "South Australia", "SalesM": 7.6, "PopulationK": 1873.8},
+                                {"id": 4, "State": "Western Australia", "SalesM": 11.0, "PopulationK": 2951.6},
+                                {"id": 5, "State": "Tasmania", "SalesM": 5.2, "PopulationK": 575.7},
+                                {"id": 6, "State": "Northern Territory", "SalesM": 2.8, "PopulationK": 254.3},
+                                {"id": 7, "State": "Australian Capital Territory", "SalesM": 3.9, "PopulationK": 472.8}
+                            ]
+                        },
+                        "key": "id",
+                        "fields": ["SalesM", "PopulationK", "State"]
+                    }
+                },
+                {
+                    "calculate": "(datum.SalesM / datum.PopulationK) * 1000",
+                    "as": "SalesPerCapitaPerThousand"
+                }
+            ],
+            "projection": {"type": "mercator"},
+            "mark": "geoshape",
+            "encoding": {
+                "color": {
+                    "field": "SalesPerCapitaPerThousand",
+                    "type": "quantitative",
+                    "scale": {
+                        "scheme": "blues"
+                    },
+                    "legend": {"title": "Sales per Capita (1000 people)"}
+                },
+                "tooltip": [
+                    {"field": "State", "type": "nominal", "title": "State"},
+                    {"field": "SalesPerCapitaPerThousand", "type": "quantitative", "title": "Sales per Capita (per 1000 people)"}
+                ]
+            }
         };
+        vegaEmbed('#view', spec).catch(console.error);
 
-        // Embed both visualizations
-        vegaEmbed('#choropleth_map', spec1).catch(console.error);
-        vegaEmbed('#bar_chart', spec2).catch(console.error);
+        // Scatter plot specification
+        const scatterSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Store Age vs. Managerial Experience",
+            "data": {
+                "url": "StoresData.csv",
+                "format": { "type": "csv" }
+            },
+            "mark": "circle",
+            "width": 400,
+            "height": 400,
+            "encoding": {
+                "x": {
+                    "field": "Age (Yrs)",
+                    "type": "quantitative",
+                    "axis": {"title": "Store Age (Years)"}
+                },
+                "y": {
+                    "field": "Mng-Exp",
+                    "type": "quantitative",
+                    "axis": {"title": "Managerial Experience (Years)"}
+                },
+                "color": {
+                    "field": "Store No",
+                    "type": "nominal",
+                    "legend": {"title": "Store Number"}
+                },
+                "size": {"value": 100},
+                "tooltip": [
+                    {"field": "Store No", "type": "nominal", "title": "Store No"},
+                    {"field": "Age (Yrs)", "type": "quantitative", "title": "Store Age (Years)"},
+                    {"field": "Mng-Exp", "type": "quantitative", "title": "Managerial Experience (Years)"}
+                ]
+            }
+        };
+        vegaEmbed('#scatterplot', scatterSpec).catch(console.error);
+
+        // Box plot specification
+        const boxPlotSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "title": "Gross Profit Distribution by Home Delivery Status",
+            "description": "A box plot showing the distribution of gross profit for stores with and without home delivery.",
+            "data": {
+                "url": "StoresData.csv",
+                "format": { "type": "csv" }
+            },
+            "transform": [
+                {
+                    "calculate": "datum.GrossProfit * 1000",
+                    "as": "GrossProfitAdjusted"
+                }
+            ],
+            "mark": {
+                "type": "boxplot",
+                "extent": "min-max"
+            },
+            "width": 400,
+            "height": 400,
+            "encoding": {
+                "x": {
+                    "field": "HomeDel",
+                    "type": "nominal",
+                    "axis": {"title": "Home Delivery Status"}
+                },
+                "y": {
+                    "field": "GrossProfitAdjusted",
+                    "type": "quantitative",
+                    "axis": {"title": "Gross Profit (Adjusted, $)"}
+                },
+                "color": {
+                    "field": "HomeDel",
+                    "type": "nominal",
+                    "legend": {"title": "Home Delivery Status"}
+                }
+            }
+        };
+        vegaEmbed('#boxplot', boxPlotSpec).catch(console.error);
+
+        // Donut chart specification for Number of Staff
+        var donutSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 400,
+            "height": 400,
+            "title": "Number of Staff by State (Percentage)",
+            "data": {
+                "values": [
+                    {"State": "New South Wales", "Staff": 2401, "Percentage": 26.03},
+                    {"State": "Victoria", "Staff": 1779, "Percentage": 19.29},
+                    {"State": "Queensland", "Staff": 1585, "Percentage": 17.18},
+                    {"State": "South Australia", "Staff": 1521, "Percentage": 16.49},
+                    {"State": "Western Australia", "Staff": 1050, "Percentage": 11.38},
+                    {"State": "Tasmania", "Staff": 285, "Percentage": 3.09},
+                    {"State": "Northern Territory", "Staff": 256, "Percentage": 2.78},
+                    {"State": "Australian Capital Territory", "Staff": 347, "Percentage": 3.76}
+                ]
+            },
+            "mark": {
+                "type": "arc",
+                "innerRadius": 100,
+                "outerRadius": 200
+            },
+            "encoding": {
+                "theta": {
+                    "field": "Percentage",
+                    "type": "quantitative",
+                    "stack": true
+                },
+                "color": {
+                    "field": "State",
+                    "type": "nominal",
+                    "legend": {"title": "State"}
+                },
+                "tooltip": [
+                    {"field": "State", "type": "nominal", "title": "State"},
+                    {"field": "Staff", "type": "quantitative", "title": "Number of Staff"},
+                    {"field": "Percentage", "type": "quantitative", "title": "Percentage (%)"}
+                ]
+            }
+        };
+        vegaEmbed('#donut_chart', donutSpec).catch(console.error);
+
+        // Donut chart specification for Wages by State
+        var wagesDonutSpec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "width": 400,
+            "height": 400,
+            "title": "Wages by State in Australia (Percentage)",
+            "data": {
+                "values": [
+                    {"State": "New South Wales", "Wages": 2.3, "Percentage": 13.0},
+                    {"State": "Victoria", "Wages": 5.8, "Percentage": 32.7},
+                    {"State": "Queensland", "Wages": 4.6, "Percentage": 25.9},
+                    {"State": "South Australia", "Wages": 3.2, "Percentage": 18.0},
+                    {"State": "Western Australia", "Wages": 4.0, "Percentage": 22.5},
+                    {"State": "Tasmania", "Wages": 1.5, "Percentage": 8.4},
+                    {"State": "Northern Territory", "Wages": 1.2, "Percentage": 6.7},
+                    {"State": "Australian Capital Territory", "Wages": 1.0, "Percentage": 5.6}
+                ]
+            },
+            "mark": {
+                "type": "arc",
+                "innerRadius": 100,
+                "outerRadius": 200
+            },
+            "encoding": {
+                "theta": {
+                    "field": "Percentage",
+                    "type": "quantitative",
+                    "stack": true
+                },
+                "color": {
+                    "field": "State",
+                    "type": "nominal",
+                    "legend": {"title": "State"}
+                },
+                "tooltip": [
+                    {"field": "State", "type": "nominal", "title": "State"},
+                    {"field": "Wages", "type": "quantitative", "title": "Wages ($m)"},
+                    {"field": "Percentage", "type": "quantitative", "title": "Percentage (%)"}
+                ]
+            }
+        };
+        vegaEmbed('#wages_donut_chart', wagesDonutSpec).catch(console.error);
     </script>
 </body>
 </html>
